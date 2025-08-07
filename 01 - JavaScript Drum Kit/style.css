@@ -33,7 +33,9 @@ body,html {
 }
 
 .playing {
+  /* make the element 10% bigger */
   transform: scale(1.1);
+  
   border-color: #ffc600;
   box-shadow: 0 0 1rem #ffc600;
 }

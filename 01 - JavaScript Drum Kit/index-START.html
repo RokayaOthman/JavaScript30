@@ -3,50 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-START.css">
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
 <body>
+  <div class="volumeSlider">
+    <input type="range" id="volume" min="0" max="100" value="100">
 
-
-  <div class="keys">
-    <div data-key="65" class="key">
-      <kbd>A</kbd>
-      <span class="sound">clap</span>
-    </div>
-    <div data-key="83" class="key">
-      <kbd>S</kbd>
-      <span class="sound">hihat</span>
-    </div>
-    <div data-key="68" class="key">
-      <kbd>D</kbd>
-      <span class="sound">kick</span>
-    </div>
-    <div data-key="70" class="key">
-      <kbd>F</kbd>
-      <span class="sound">openhat</span>
-    </div>
-    <div data-key="71" class="key">
-      <kbd>G</kbd>
-      <span class="sound">boom</span>
-    </div>
-    <div data-key="72" class="key">
-      <kbd>H</kbd>
-      <span class="sound">ride</span>
-    </div>
-    <div data-key="74" class="key">
-      <kbd>J</kbd>
-      <span class="sound">snare</span>
-    </div>
-    <div data-key="75" class="key">
-      <kbd>K</kbd>
-      <span class="sound">tom</span>
-    </div>
-    <div data-key="76" class="key">
-      <kbd>L</kbd>
-      <span class="sound">tink</span>
-    </div>
   </div>
+
+
+    <div class="keys">
+      <div data-key="65" class="key">
+        <kbd>A</kbd>
+        <span class="sound">clap</span>
+      </div>
+      <div data-key="83" class="key">
+        <kbd>S</kbd>
+        <span class="sound">hihat</span>
+      </div>
+      <div data-key="68" class="key">
+        <kbd>D</kbd>
+        <span class="sound">kick</span>
+      </div>
+      <div data-key="70" class="key">
+        <kbd>F</kbd>
+        <span class="sound">openhat</span>
+      </div>
+      <div data-key="71" class="key">
+        <kbd>G</kbd>
+        <span class="sound">boom</span>
+      </div>
+      <div data-key="72" class="key">
+        <kbd>H</kbd>
+        <span class="sound">ride</span>
+      </div>
+      <div data-key="74" class="key">
+        <kbd>J</kbd>
+        <span class="sound">snare</span>
+      </div>
+      <div data-key="75" class="key">
+        <kbd>K</kbd>
+        <span class="sound">tom</span>
+      </div>
+      <div data-key="76" class="key">
+        <kbd>L</kbd>
+        <span class="sound">tink</span>
+      </div>
+    </div>
 
   <audio data-key="65" src="sounds/clap.wav"></audio>
   <audio data-key="83" src="sounds/hihat.wav"></audio>
@@ -59,6 +63,64 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+
+function removeTransition(evnt)
+{
+  if(evnt.propertyName !== 'transform') return;
+  evnt.target.classList.remove('playing');
+}
+
+
+let currentVolume = 1.0;
+  const volumeSlider = document.getElementById("volume");
+  volumeSlider.addEventListener("input", (eo) => {
+    currentVolume = eo.currentTarget.value / 100; 
+  });
+
+function playSoundByKeys(evnt)
+{
+  
+  const audio = document.querySelector(`audio[data-key="${evnt.keyCode}"]`);
+  const keyElement = document.querySelector(`div[data-key="${evnt.keyCode}"]`);
+  if(!audio) return;
+
+  // adding a class to the DOM object so that it could be manipulated with css afterwards
+  keyElement.classList.add('playing');
+  
+  // whenever you click it , the audio will start again playing from the beginning
+  audio.currentTime = 0;
+  audio.volume = currentVolume; 
+  audio.play();
+  
+}
+
+function playSoundByClick(evnt)
+{
+  // searching for the nearest key to the one you clicked (closest goes upwards)
+  const clickedElement = evnt.target.closest('.key');
+  if (!clickedElement) return;
+
+  const dataKey = clickedElement.getAttribute('data-key');
+  const audio = document.querySelector(`audio[data-key="${dataKey}"]`);
+  if (!audio) return;
+
+  clickedElement.classList.add('playing');
+  audio.currentTime = 0;
+  audio.volume = currentVolume;
+  audio.play();
+}
+
+// declaring a const array of keys 
+// we wanted to convert it to  an array so that we can use foreach method with it
+const keys = Array.from(document.querySelectorAll('.key'));
+
+// the 'transitionend' event fires in css when a transition finished on an element
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+window.addEventListener('keydown', playSoundByKeys);
+// window.addEventListener('click', playSoundByClick);
+
+document.querySelector('.keys').addEventListener('click', playSoundByClick);
 
 </script>
 
