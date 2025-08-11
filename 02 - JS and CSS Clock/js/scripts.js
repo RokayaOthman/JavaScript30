@@ -38,5 +38,3 @@ soundButton.addEventListener("click", () => {
     }
 }); 
 
-
-
