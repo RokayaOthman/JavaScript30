@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>JS + CSS Clock</title>
   <link rel="icon" href="https://fav.farm/✅" />
+  
 </head>
 <body>
 
@@ -59,7 +60,7 @@
 
     .hand {
       width: 50%;
-      height: 6px;
+      height: 5px;
       background: black;
       position: absolute;
       top: 50%;
@@ -76,12 +77,17 @@
   const hourHand = document.querySelector('.hour-hand');
 
   function setDate() {
+    // Date() is the date object constructor
+    // built in object that returns the current time as string
     const now = new Date();
 
+    // getSeconds() reads the seconds part inside the exact moment stored in now
     const seconds = now.getSeconds();
-    const secondsDegrees = ((seconds / 60) * 360) + 90;
+
+    const secondsDegrees = ((seconds / 60) * 360) + 180 + 90;
     secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
 
+    
     const mins = now.getMinutes();
     const minsDegrees = ((mins / 60) * 360) + ((seconds/60)*6) + 90;
     minsHand.style.transform = `rotate(${minsDegrees}deg)`;
